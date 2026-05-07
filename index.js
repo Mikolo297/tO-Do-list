@@ -45,3 +45,47 @@ function clearAll() {
   tasks = [];
   displayTasks();
 }
+
+// Save tasks to localStorage
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Load tasks on page load
+window.onload = function() {
+  const saved = localStorage.getItem('tasks');
+  if (saved) tasks = JSON.parse(saved);
+  displayTasks();
+}
+
+// Save tasks to localStorage
+function saveTasks() {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Load tasks when page opens
+window.onload = function() {
+  const saved = localStorage.getItem('tasks');
+  if (saved) tasks = JSON.parse(saved);
+  displayTasks();
+}
+
+// Auto save whenever tasks change
+function addTask() {
+  const input = document.getElementById('input');
+  const task = input.value.trim();
+  if (task !== "") {
+    tasks.push({ text: task, completed: false });
+    input.value = "";
+    displayTasks();
+    saveTasks();
+  } else {
+    alert("Please enter a task!");
+  }
+}
+
+function deleteTask(index) {
+  tasks.splice(index, 1);
+  displayTasks();
+  saveTasks();
+}
