@@ -1,11 +1,11 @@
 let tasks = [];
 
 function addTask() {
-  let input = document.getElementById('input');
-  let task = input.value.trim();
+  const input = document.getElementById('input');
+  const task = input.value.trim();
 
   if (task !== "") {
-    tasks.push(task);
+    tasks.push({ text: task, completed: false });
     input.value = "";
     displayTasks();
   } else {
@@ -14,18 +14,26 @@ function addTask() {
 }
 
 function displayTasks() {
-  let showList = document.getElementById('showList');
-  let ul = document.createElement('ul');
+  const showList = document.getElementById('showList');
+  const ul = document.createElement('ul');
 
   tasks.forEach((task, index) => {
-    let li = document.createElement('li');
-    li.textContent = task;
-    li.innerHTML += ` <button onclick="deleteTask(${index})">Delete</button>`;
+    const li = document.createElement('li');
+    li.className = task.completed ? 'completed' : '';
+    li.innerHTML = `
+      <span onclick="toggleTask(${index})">${task.text}</span>
+      <button onclick="deleteTask(${index})">Delete</button>
+    `;
     ul.appendChild(li);
   });
 
   showList.innerHTML = "";
   showList.appendChild(ul);
+}
+
+function toggleTask(index) {
+  tasks[index].completed = !tasks[index].completed;
+  displayTasks();
 }
 
 function deleteTask(index) {
@@ -37,6 +45,3 @@ function clearAll() {
   tasks = [];
   displayTasks();
 }
-  
-
-
