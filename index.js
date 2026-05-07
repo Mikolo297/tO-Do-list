@@ -33,6 +33,7 @@ function displayTasks() {
 
 function toggleTask(index) {
   tasks[index].completed = !tasks[index].completed;
+  saveTasks();
   displayTasks();
 }
 
@@ -43,6 +44,7 @@ function deleteTask(index) {
 
 function clearAll() {
   tasks = [];
+  saveTasks();
   displayTasks();
 }
 
@@ -54,7 +56,14 @@ function saveTasks() {
 // Load tasks on page load
 window.onload = function() {
   const saved = localStorage.getItem('tasks');
-  if (saved) tasks = JSON.parse(saved);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      tasks = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      tasks = [];
+    }
+  }
   displayTasks();
 }
 
@@ -66,7 +75,14 @@ function saveTasks() {
 // Load tasks when page opens
 window.onload = function() {
   const saved = localStorage.getItem('tasks');
-  if (saved) tasks = JSON.parse(saved);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      tasks = Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      tasks = [];
+    }
+  }
   displayTasks();
 }
 
