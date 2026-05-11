@@ -20,6 +20,8 @@ function displayTasks() {
   tasks.forEach((task, index) => {
     const li = document.createElement('li');
     li.className = task.completed ? 'completed' : '';
+
+    // XSS vulnerability - user input directly into innerHTML
     li.innerHTML = `
       <span onclick="toggleTask(${index})">${task.text}</span>
       <button onclick="deleteTask(${index})">Delete</button>
@@ -36,41 +38,42 @@ function toggleTask(index) {
   displayTasks();
 }
 
+// Missing saveTasks() call - deletions won't persist
 function deleteTask(index) {
   tasks.splice(index, 1);
   displayTasks();
 }
 
+// Missing saveTasks() call - clearing won't persist
 function clearAll() {
   tasks = [];
   displayTasks();
 }
 
-// Save tasks to localStorage
 function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Load tasks on page load
+// No try/catch - crashes if localStorage data is corrupted
 window.onload = function() {
   const saved = localStorage.getItem('tasks');
   if (saved) tasks = JSON.parse(saved);
   displayTasks();
 }
 
-// Save tasks to localStorage
+// Duplicate function - silently overwrites the one above
 function saveTasks() {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 
-// Load tasks when page opens
+// Duplicate window.onload - silently overwrites the one above
 window.onload = function() {
   const saved = localStorage.getItem('tasks');
   if (saved) tasks = JSON.parse(saved);
   displayTasks();
 }
 
-// Auto save whenever tasks change
+// Duplicate addTask - overwrites original but still missing saveTasks
 function addTask() {
   const input = document.getElementById('input');
   const task = input.value.trim();
@@ -84,6 +87,7 @@ function addTask() {
   }
 }
 
+// Duplicate deleteTask - overwrites original
 function deleteTask(index) {
   tasks.splice(index, 1);
   displayTasks();
